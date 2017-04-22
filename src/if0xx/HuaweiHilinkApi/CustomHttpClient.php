@@ -1,4 +1,5 @@
 <?php
+
 namespace if0xx\HuaweiHilinkApi;
 
 
