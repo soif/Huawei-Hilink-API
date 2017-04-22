@@ -1,9 +1,5 @@
 <?php
-namespace HSPDev\HuaweiApi;
-/*
-* Depends on:
-* HSPDev\HuaweiApi\CustomHttpClient
-*/
+namespace if0xx\HuaweiHilinkApi;
 
 /**
 * This class handles login, sessions and such.

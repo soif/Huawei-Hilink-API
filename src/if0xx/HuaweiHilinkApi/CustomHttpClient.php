@@ -1,5 +1,5 @@
 <?php
-namespace HSPDev\HuaweiApi;
+namespace if0xx\HuaweiHilinkApi;
 
 
 /**
