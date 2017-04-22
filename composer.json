@@ -17,7 +17,7 @@
             "email": "ulf@buermeyer.de",
             "homepage": "https://buermeyer.de",
             "role": "Developer"
-        },
+        }
     ],
     "autoload": {
         "psr-0" : {
