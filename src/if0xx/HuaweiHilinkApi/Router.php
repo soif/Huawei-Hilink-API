@@ -11,7 +11,7 @@ class Router
 {
 	private $http = null; //Our custom HTTP provider.
 
-	private $routerAddress = 'http://192.168.8.1'; //This is the one for the router I got.
+	private $routerAddress = 'http://192.168.1.1'; //This is the one for the router I got.
 
 	//These two we need to acquire through an API call.
 	private $sessionInfo = '';
@@ -137,10 +137,7 @@ class Router
 
 
 	/**
-	* Gets the SMS inbox. 
-	* Page parameter is NOT null indexed and starts at 1.
-	* I don't know if there is an upper limit on $count. Your milage may vary.
-	* unreadPrefered should give you unread messages first.
+	* Sets the LED on.
 	* @return boolean
 	*/
 	public function setLedOn($on = false)
@@ -156,7 +153,7 @@ class Router
 	}
 
 	/**
-	* Checks whatever we are logged in
+	* Checks the LED status
 	* @return boolean
 	*/
 	public function getLedStatus()
@@ -196,13 +193,13 @@ class Router
 	}
 
 	/**
-	* Gets the SMS inbox. 
+	* Gets some SMS box: $boxType 1 is inbox, 2 is sentbox
 	* Page parameter is NOT null indexed and starts at 1.
 	* I don't know if there is an upper limit on $count. Your milage may vary.
 	* unreadPrefered should give you unread messages first.
 	* @return SimpleXMLElement
 	*/
-	public function getInbox($page = 1, $count = 20, $unreadPreferred = false)
+    public function getSMSBox($boxType = 1, $page = 1, $count = 20, $unreadPreferred = false)
 	{
 		//Makes sure we are ready for the next request.
 		$this->prepare(); 
@@ -210,7 +207,7 @@ class Router
 		$inboxXml = '<?xml version="1.0" encoding="UTF-8"?><request>
 			<PageIndex>'.$page.'</PageIndex>
 			<ReadCount>'.$count.'</ReadCount>
-			<BoxType>1</BoxType>
+			<BoxType>'.$boxType.'</BoxType>
 			<SortType>0</SortType>
 			<Ascending>0</Ascending>
 			<UnreadPreferred>'.($unreadPreferred ? '1' : '0').'</UnreadPreferred>
@@ -220,6 +217,26 @@ class Router
 		$obj = new \SimpleXMLElement($xml);
 		return $obj;
 	}
+
+
+    /**
+     * Gets the SMS inbox.
+     * just a wrapper for the generic get SMS box function.
+     * @return SimpleXMLElement
+     */
+    public function getInbox($page = 1, $count = 20, $unreadPreferred = false) {
+        return $this->getSMSBox(1, $page, $count, $unreadPreferred);
+    }
+
+
+    /**
+     * Gets the SMS sentbox.
+     * just a wrapper for the generic get SMS box function.
+     * @return SimpleXMLElement
+     */
+    public function getSentbox($page = 1, $count = 20, $unreadPreferred = false) {
+        return $this->getSMSBox(2, $page, $count, $unreadPreferred);
+    }
 
 	/**
 	* Deletes an SMS by ID, also called "Index".

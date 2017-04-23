@@ -1,14 +1,15 @@
 <?php
 require_once 'vendor/autoload.php';
 
-//The router class is the main entry point for interaction.
-$router = new HSPDev\HuaweiApi\Router;
+// The router class is the main entry point for interaction.
+$router = new if0xx\HuaweiHilinkApi\Router;
 
-//If specified without http or https, assumes http://
-$router->setAddress('192.168.8.1');
+// if specified without http or https, assumes http://
+$router->setAddress('192.168.1.1');
 
-//Username and password. 
-//Username is always admin as far as I can tell.
-$router->login('admin', 'your-password');
+// Username and password.
+// Username is always admin as far as I can tell, default password is admin as well.
+$router->login('admin', 'admin');
 
-var_dump($router->getLedStatus());
+var_dump($router->getSentbox());
+
