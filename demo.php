@@ -9,7 +9,7 @@ $router->setAddress('192.168.1.1');
 
 // Username and password.
 // Username is always admin as far as I can tell, default password is admin as well.
-$router->login('admin', '');
+$router->login('admin', 'admin');
 
 var_dump($router->getInbox());
 
