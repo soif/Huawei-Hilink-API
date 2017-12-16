@@ -16,13 +16,28 @@ class Router
 	//These two we need to acquire through an API call.
 	private $sessionInfo = '';
 	private $tokenInfo = '';
+	private $needsAuth = true;
 
 	public function __construct()
 	{
 		$this->http = new CustomHttpClient();
 	}
 
-	/**
+    /**
+     * Sets the flag indicating if the router needs authentication or not
+     */
+    public function setNeedsAuth($needsAuth)
+    {
+        if ($needsAuth) {
+            $this->needsAuth = true;
+        }
+        else {
+            $this->needsAuth = false;
+        }
+    }
+
+
+        /**
 	* Sets the router address.
 	*/
 	public function setAddress($address)
@@ -270,7 +285,7 @@ class Router
 	public function sendSms($receiver, $message)
 	{
 		//Makes sure we are ready for the next request.
-		$this->prepare(); 
+		$this->prepare();
 
 		/*
 		* Note how it wants the length of the content also.
@@ -304,8 +319,13 @@ class Router
 	*/
 	public function login($username, $password)
 	{
+
+	    if(!$this->needsAuth) {
+            throw new \RuntimeException('This router has been set not to use authentication.');
+        }
+
 		//Makes sure we are ready for the next request.
-		$this->prepare(); 
+		$this->prepare();
 
 		/*
 		* Note how the router wants the password to be the following:
@@ -347,6 +367,11 @@ class Router
 	*/
 	private function prepare()
 	{
+	    if(!($this->needsAuth)) {
+	        // if this router doesn't need auth just return as looking for session data will fail
+	        return;
+        }
+
 		//Check to see if we have session / token.
 		if(strlen($this->sessionInfo) == 0 || strlen($this->tokenInfo) == 0)
 		{
