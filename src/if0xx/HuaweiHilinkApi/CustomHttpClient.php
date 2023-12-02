@@ -82,6 +82,30 @@ class CustomHttpClient
 
 
 	/**
+	* Get the CURL result and close or throw an Exception 
+	*/
+	private function getCurlExec($ch) {
+		$result=curl_exec($ch);
+
+		$http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		$error='';
+		if ($err_num=curl_errno($ch)){
+			$error=curl_error($ch);
+		}
+		
+		curl_close($ch);
+		
+		if(!$result){
+			throw new \Exception("A network error occured with cURL: ($err_num) $error");	
+		}
+		if($http_code >= 400 ){
+			throw new \Exception("cURL returned an HTTP error code: $http_code");
+		}
+		return $result;
+	}
+
+
+	/**
 	* Makes HTTP POST requests containing XML data to the router.
 	*/
 	public function postXml($url, $xmlString)
@@ -92,13 +116,7 @@ class CustomHttpClient
 		curl_setopt($ch, CURLOPT_POST, 1);
 		curl_setopt($ch, CURLOPT_POSTFIELDS, $xmlString);
 
-		$result=curl_exec($ch);
-		curl_close($ch);
-		if(!$result)
-		{
-			throw new \Exception("A network error occured with cURL.");	
-		}
-		return $result;
+		return $this->getCurlExec($ch);
 	} 
 
 
@@ -139,17 +157,11 @@ class CustomHttpClient
 	/**
 	* Performs a HTTP GET to the specified URL.
 	*/
-	public function get($url)
+	public function get($url) 
 	{
 		$ch = $this->getCurlObj($url);
-
-		$result=curl_exec($ch);
-		curl_close($ch);
-		if(!$result)
-		{
-			throw new \Exception("A network error occured with cURL.");	
-		}
-		return $result;
+		return $this->getCurlExec($ch);
 	} 
+
 
 }
