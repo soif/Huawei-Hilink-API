@@ -73,6 +73,10 @@ class CustomHttpClient
 		curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
 		curl_setopt($ch,CURLOPT_ENCODING , "gzip"); //The router is fine with this, so no problem.
 		curl_setopt($ch,CURLOPT_HTTPHEADER, $header);
+		// needed for self-signed certificates
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+
 
 		//The router rotates tokens in the response headers randomly, so we will parse them all.
 		curl_setopt($ch, CURLOPT_HEADERFUNCTION, array($this, 'HandleHeaderLine'));
